@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ActsAsGravatar::VERSION
   spec.authors       = ["Atsushi Nakamura"]
   spec.email         = ["a.nkmr.ja@gmail.com"]
-  spec.description   = "acts_as_gravatar provides easily gravatar access from model ActiveRecord.Can interoperate with devise, etc.."
-  spec.summary       = "acts_as_gravatar provides easily gravatar access from model ActiveRecord.Can interoperate with devise, etc.."
+  spec.description   = "acts_as_gravatar provide simple access to gravatar from ActiveRecord.Can interoperate with devise, etc.."
+  spec.summary       = "acts_as_gravatar provide simple access to gravatar from ActiveRecord.Can interoperate with devise, etc.."
   spec.homepage      = "https://github.com/alfa-jpn/acts_as_gravatar"
   spec.license       = "MIT"
 
