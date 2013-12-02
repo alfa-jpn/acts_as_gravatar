@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = ActsAsGravatar::VERSION
   spec.authors       = ["Atsushi Nakamura"]
   spec.email         = ["a.nkmr.ja@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = "acts_as_gravatar provides easily gravatar access from model ActiveRecord.Can interoperate with devise, etc.."
+  spec.summary       = "acts_as_gravatar provides easily gravatar access from model ActiveRecord.Can interoperate with devise, etc.."
+  spec.homepage      = "https://github.com/alfa-jpn/acts_as_gravatar"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -20,4 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "rspec", "~> 2.14.1"
+  spec.add_development_dependency "yard", "~> 0.8.7.3"
+
+  spec.add_dependency "inum", "~> 1.3.7"
+  spec.add_dependency "activerecord"
 end
