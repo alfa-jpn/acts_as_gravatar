@@ -47,12 +47,12 @@ when call acts\_as\_gravatar, can set default values.
 ```
 class User < ActiveRecord::Base
   acts_as_gravatar({
-    :column        => :email                            # set email column.
-    :secure        => false                             # default protocol. (https).
-    :size          => 80                                # default image size.
-    :default_image => nil                               # default default_image.
-    :rating        => ActsAsGravatar::Enums::Rating     # default rating.
-    :image_type    => ActsAsGravatar::Enums::ImageType  # default image_type.
+    :column        => :email,                               # set email column.
+    :secure        => false,                                # set default protocol. (https(ssl)).
+    :size          => 80,                                   # set default image size.
+    :default_image => nil,                                  # set default default_image.
+    :rating        => ActsAsGravatar::Enums::Rating::PG,    # set default rating.(G,PG,R,X)
+    :image_type    => ActsAsGravatar::Enums::ImageType:Gif  # set default image_type.(Jpg,Jpeg,Gif,Png)
   })
 end
 ```
