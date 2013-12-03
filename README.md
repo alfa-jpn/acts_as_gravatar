@@ -33,18 +33,20 @@ The next method becomes to be usable.
 ```
 user = User.find(1); #
 
-# get html tag of gravatar.
+# get profile url of gravatar.
 user.gravatar_profile  # URL of gravatar profile.
 
-# get url of gravatar. 
+# get image url of gravatar.
 user.gravatar_image     # URL of gravatar image.
 
 ```
+
 acts\_as\_gravatar read `email` column.(default)
 
 ### Options
 when call acts\_as\_gravatar, can set default values.
 (The option not to appoint at the time of acts_as_gravatar summons becomes the default of gravatar.)
+
 ```
 class User < ActiveRecord::Base
   acts_as_gravatar({
@@ -58,19 +60,20 @@ class User < ActiveRecord::Base
   })
 end
 ```
+Please See [Gravatar](http://ja.gravatar.com/site/implement/), Options of gravatar for more detail.
 
 And can set options, when call `gravatar_image` or `gravatar_profile`.
 
 ```
 user = User.find(1); #
 
-# get url of gravatar.
+# get image url of gravatar.
 user.gravatar_image :secure => true, :size => 200
 
-
-# get tag of gravatar.
-user.gravatar_tag :column => :other_column
+# get profile url of gravatar.
+user.gravatar_profile :column => :other_column
 ```
+
 
 ## API DOCUMENT
 
