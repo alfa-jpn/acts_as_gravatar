@@ -8,17 +8,18 @@ module ActsAsGravatar
     # Use acts_as_gravatar in model.
     #
     # @example
-    #   acts_as_gravatar {
-    #     :column        => :email                            # email column.
-    #     :secure        => false                             # default protocol. (https).
-    #     :size          => 80                                # default image size.
-    #     :default_image => nil                               # default default_image.
-    #     :rating        => ActsAsGravatar::Enums::Rating     # default rating.
-    #     :image_type    => ActsAsGravatar::Enums::ImageType  # default image_type.
-    #   }
+    #   acts_as_gravatar({
+    #     :column        => :email,                                # email column of Model.
+    #     :default_image => nil,                                   # default_image.(URL or gravatar default image param.)
+    #     :force_default => false,                                 # force the default image.
+    #     :image_type    => ActsAsGravatar::Enums::ImageType::PNG, # image_type. (JPG/JPEG/GIF/PNG)
+    #     :rating        => ActsAsGravatar::Enums::Rating::PG,     # rating. (G/PG/R/X)
+    #     :secure        => false,                                 # secure protocol. (https).
+    #     :size          => 80,                                    # image size.
+    #   })
     #
-    # @params params [Hash] Options of ActsAsGravatar.
-    def acts_as_gravatar(params = {})
+    # @params default_options [Hash] Default options of ActsAsGravatar.
+    def acts_as_gravatar(default_options = {})
       options = {
         :column        => :email,
         :secure        => false,
@@ -26,10 +27,10 @@ module ActsAsGravatar
         :default_image => nil,
         :rating        => nil,
         :image_type    => nil
-      }.merge(params)
+      }.merge(default_options)
 
       include ActsAsGravatar::Methods
-      instance_variable_set(:@acts_as_gravatar_params, options)
+      instance_variable_set(:@acts_as_gravatar_default_options, options)
     end
   end
 
@@ -45,57 +46,54 @@ module ActsAsGravatar
     #
     #   # with option.
     #   url = user.gravatar_url {
-    #     :secure        => false                             # default protocol. (https).
-    #     :size          => 80                                # default image size.
-    #     :default_image => nil                               # default default_image.
-    #     :rating        => ActsAsGravatar::Enums::Rating     # default rating.
-    #     :image_type    => ActsAsGravatar::Enums::ImageType  # default image_type.
+    #     :column        => :email,                                # email column of Model.
+    #     :default_image => nil,                                   # default_image.(URL or gravatar default image param.)
+    #     :force_default => false,                                 # force the default image.
+    #     :image_type    => ActsAsGravatar::Enums::ImageType::PNG, # image_type. (JPG/JPEG/GIF/PNG)
+    #     :rating        => ActsAsGravatar::Enums::Rating::PG,     # rating. (G/PG/R/X)
+    #     :secure        => false,                                 # secure protocol. (https).
+    #     :size          => 80,                                    # image size.
     #   }
     #
-    # @param options [Hash] Option of gravatar.
+    # @param options [Hash] Option of gravatar image.
     #
     # @return [String] Url of Gravatar image.
-    def gravatar_url(options={})
-      opt   = self.class.instance_variable_get(:@acts_as_gravatar_params).merge(options)
-      email = send(opt[:column])
+    def gravatar_image(options = {})
+      opts  = gravatar_option(options)
+      email = send(opts[:column])
 
-      ActsAsGravatar::Gravatar.generate_url(
-        email, opt[:secure], opt[:size], opt[:default_image], opt[:rating], opt[:image_type]
-      )
+      ActsAsGravatar::Gravatar.generate_image(email, opts)
     end
 
-    # Generate a tag of Gravatar image.
+    # Generate a URL of Gravatar profile.
     # @example
     #   user = User.find(1)
     #   # get url with default options.
-    #   tag = user.gravatar_tag
+    #   profile = user.gravatar_profile
     #
     #   # with option.
-    #   tag = user.gravatar_tag {
-    #     :secure        => false                             # default protocol. (https).
-    #     :size          => 80                                # default image size.
-    #     :default_image => nil                               # default default_image.
-    #     :rating        => ActsAsGravatar::Enums::Rating     # default rating.
-    #     :image_type    => ActsAsGravatar::Enums::ImageType  # default image_type.
+    #   profile = user.gravatar_profile {
+    #     :column        => :email
     #   }
     #
-    #   # with attributes of tag.
-    #   tag = user.gravatar_tag {},{
-    #     width: "100px",
-    #     height: "100px"
-    #   }
-    #
-    # @param options    [Hash] Option of gravatar.
-    # @param attributes [Hash] Attributes of tag.
+    # @param options    [Hash] Option of gravatar profile.
     #
     # @return [String] tag of Gravatar image.
-    def gravatar_tag(options={}, attributes={})
-      opt   = self.class.instance_variable_get(:@acts_as_gravatar_params).merge(options)
-      email = send(opt[:column])
+    def gravatar_profile(options = {})
+      opts  = gravatar_option(options)
+      email = send(opts[:column])
 
-      ActsAsGravatar::Gravatar.generate_tag(
-        email, opt[:secure], opt[:size], opt[:default_image], opt[:rating], opt[:image_type], attributes
-      )
+      ActsAsGravatar::Gravatar.generate_profile(email, opts)
+    end
+
+    private
+    # Get options of gravatar.
+    # @note return default options merge merge_options.
+    #
+    # @param merge_options [Hash] Options of gravatar.
+    # @return [Hash] Options of gravatar.
+    def gravatar_option(merge_options = {})
+      self.class.instance_variable_get(:@acts_as_gravatar_default_options).merge(merge_options)
     end
 
   end

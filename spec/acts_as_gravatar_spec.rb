@@ -9,6 +9,15 @@ describe ActsAsGravatar do
 
     ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => test_db
     ActiveRecord::Base.connection.execute 'CREATE TABLE tests(id integer not null primary key, email string)'
+
+    @default_option ={
+        :column=>:email,
+        :secure=>false,
+        :size=>nil,
+        :default_image=>nil,
+        :rating=>nil,
+        :image_type=>nil
+    }
   end
 
   context 'after acts_as_gravatar,' do
@@ -23,12 +32,12 @@ describe ActsAsGravatar do
       end
     end
 
-    it 'gravatar_url exists.' do
-      expect(Test.method_defined?(:gravatar_url))
+    it 'gravatar_image exists.' do
+      expect(Test.method_defined?(:gravatar_image))
     end
 
-    it 'gravatar_tag exists.' do
-      expect(Test.method_defined?(:gravatar_tag))
+    it 'gravatar_profile exists.' do
+      expect(Test.method_defined?(:gravatar_profile))
     end
 
     context 'instance of ActiveRecord::Base' do
@@ -36,14 +45,14 @@ describe ActsAsGravatar do
         @test_instance = Test.new
       end
 
-      it 'gravatar_url call ActsAsGravatar.generate_url' do
-        ActsAsGravatar::Gravatar.should_receive(:generate_url).with('nyarukosan@nyaruko.com', false, nil, nil, nil, nil)
-        @test_instance.gravatar_url
+      it 'gravatar_image call ActsAsGravatar.generate_image' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_image).with('nyarukosan@nyaruko.com', @default_option)
+        @test_instance.gravatar_image
       end
 
-      it 'gravatar_tag call ActsAsGravatar.generate_tag' do
-        ActsAsGravatar::Gravatar.should_receive(:generate_tag).with('nyarukosan@nyaruko.com', false, nil, nil, nil, nil, {})
-        @test_instance.gravatar_tag
+      it 'gravatar_profile call ActsAsGravatar.generate_profile' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_profile).with('nyarukosan@nyaruko.com', @default_option)
+        @test_instance.gravatar_profile
       end
     end
   end
@@ -56,7 +65,7 @@ describe ActsAsGravatar do
           :size           => 200,
           :default_image  => 'http://nyaruko.com/',
           :rating         => ActsAsGravatar::Enums::Rating::PG,
-          :image_type     => ActsAsGravatar::Enums::ImageType::Gif
+          :image_type     => ActsAsGravatar::Enums::ImageType::GIF
         })
 
         attr_accessor :email
@@ -72,31 +81,64 @@ describe ActsAsGravatar do
         @test_instance = Test.new
       end
 
-      it 'gravatar_url call ActsAsGravatar.generate_url' do
-        ActsAsGravatar::Gravatar.should_receive(:generate_url).with(
-          'nyarukosan@nyaruko.com',
-          true,
-          200,
-          'http://nyaruko.com/',
-          ActsAsGravatar::Enums::Rating::PG,
-          ActsAsGravatar::Enums::ImageType::Gif
+      it 'gravatar_url call ActsAsGravatar.generate_image' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_image).with(
+          "nyarukosan@nyaruko.com",
+          {
+            :column         => :email,
+            :secure         => true,
+            :size           => 200,
+            :default_image  => 'http://nyaruko.com/',
+            :rating         => ActsAsGravatar::Enums::Rating::PG,
+            :image_type     => ActsAsGravatar::Enums::ImageType::GIF
+          }
         )
-
-        @test_instance.gravatar_url
+        @test_instance.gravatar_image
       end
 
-      it 'gravatar_tag call ActsAsGravatar.generate_tag' do
-        attributes = {width: "500px"}
-        ActsAsGravatar::Gravatar.should_receive(:generate_tag).with(
-          'nyarukosan@nyaruko.com',
-          true,
-          200,
-          'http://nyaruko.com/',
-          ActsAsGravatar::Enums::Rating::PG,
-          ActsAsGravatar::Enums::ImageType::Gif,
-          attributes
+      it 'gravatar_image call ActsAsGravatar.generate_image with merged option.' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_image).with(
+            "nyarukosan@nyaruko.com",
+            {
+                :column         => :email,
+                :secure         => true,
+                :size           => 200,
+                :default_image  => 'mm',
+                :rating         => ActsAsGravatar::Enums::Rating::PG,
+                :image_type     => ActsAsGravatar::Enums::ImageType::GIF
+            }
         )
-        @test_instance.gravatar_tag({}, attributes)
+        @test_instance.gravatar_image :default_image => 'mm'
+      end
+
+      it 'gravatar_profile call ActsAsGravatar.generate_profile' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_profile).with(
+          "nyarukosan@nyaruko.com",
+          {
+            :column         => :email,
+            :secure         => true,
+            :size           => 200,
+            :default_image  => 'http://nyaruko.com/',
+            :rating         => ActsAsGravatar::Enums::Rating::PG,
+            :image_type     => ActsAsGravatar::Enums::ImageType::GIF
+          }
+        )
+        @test_instance.gravatar_profile
+      end
+
+      it 'gravatar_profile call ActsAsGravatar.generate_profile with merged option.' do
+        ActsAsGravatar::Gravatar.should_receive(:generate_profile).with(
+            "nyarukosan@nyaruko.com",
+            {
+                :column         => :email,
+                :secure         => false,
+                :size           => 888,
+                :default_image  => 'http://nyaruko.com/',
+                :rating         => ActsAsGravatar::Enums::Rating::PG,
+                :image_type     => ActsAsGravatar::Enums::ImageType::GIF
+            }
+        )
+        @test_instance.gravatar_profile :secure => false, :size => 888
       end
     end
   end

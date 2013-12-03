@@ -1,6 +1,7 @@
-# ActsAsGravatar
+# acts_as_gravatar
 
 acts\_as\_gravatar provide simple access to gravatar from ActiveRecord.
+From the email columns (can set it optionally) such as devices, acts_as_gravatar generate a URL of gravatar.
 
 ## Installation
 
@@ -33,49 +34,47 @@ The next method becomes to be usable.
 user = User.find(1); #
 
 # get html tag of gravatar.
-user.gravatar_tag
+user.gravatar_profile  # URL of gravatar profile.
 
 # get url of gravatar. 
-user.gravatar_url
+user.gravatar_image     # URL of gravatar image.
 
 ```
 acts\_as\_gravatar read `email` column.(default)
 
 ### Options
 when call acts\_as\_gravatar, can set default values.
-
+(The option not to appoint at the time of acts_as_gravatar summons becomes the default of gravatar.)
 ```
 class User < ActiveRecord::Base
   acts_as_gravatar({
-    :column        => :email,                               # set email column.
-    :secure        => false,                                # set default protocol. (https(ssl)).
-    :size          => 80,                                   # set default image size.
-    :default_image => nil,                                  # set default default_image.
-    :rating        => ActsAsGravatar::Enums::Rating::PG,    # set default rating.(G,PG,R,X)
-    :image_type    => ActsAsGravatar::Enums::ImageType:Gif  # set default image_type.(Jpg,Jpeg,Gif,Png)
+    :column        => :email,                                # email column of Model.
+    :default_image => nil,                                   # default_image.(URL or gravatar default image param.)
+    :force_default => false,                                 # force the default image.
+    :image_type    => ActsAsGravatar::Enums::ImageType::PNG, # image_type. (JPG/JPEG/GIF/PNG)
+    :rating        => ActsAsGravatar::Enums::Rating::PG,     # rating. (G/PG/R/X)
+    :secure        => false,                                 # secure protocol. (https).
+    :size          => 80,                                    # image size.
   })
 end
 ```
 
-And can set options, when call `gravatar_tag` or `gravatar_url`.
+And can set options, when call `gravatar_image` or `gravatar_profile`.
 
 ```
 user = User.find(1); #
 
 # get url of gravatar.
-user.gravatar_url :secure => true, :size => 200
+user.gravatar_image :secure => true, :size => 200
 
-```
-
-gravatar_tag can set some html attributes.
-
-```
-user = User.find(1); #
 
 # get tag of gravatar.
-user.gravatar_tag {:secure => true, :size => 200}, {:width => "200px"}
+user.gravatar_tag :column => :other_column
 ```
 
+## API DOCUMENT
+
+* [acts_as_gravatar](http://rubydoc.info/github/alfa-jpn/acts_as_gravatar/frames)
 
 ## Contributing
 
