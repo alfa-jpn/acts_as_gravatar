@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2.14.1"
   spec.add_development_dependency "yard", "~> 0.8.7.3"
 
-  spec.add_dependency "inum", "~> 2.0.0"
+  spec.add_dependency "inum", "~> 2.1.0"
   spec.add_dependency "activerecord"
 end
